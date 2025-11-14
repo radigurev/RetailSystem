@@ -19,7 +19,6 @@ public class StoreToCentral(IMqService mqService) : IStoreToCentral
 
         string json = JsonSerializer.Serialize(message);
         byte[] body = Encoding.UTF8.GetBytes(json);
-
         await _mqService.Channel.BasicPublishAsync(
             exchange: "central-sync",
             routingKey: string.Empty,
