@@ -83,7 +83,6 @@ namespace StoreApp.CommonLogic
             if (existing == null)
                 throw new EntityNotFoundException("Product not found");
 
-            entity.CreatedAt = existing.CreatedAt;
             entity.UpdatedAt = DateTime.UtcNow;
 
             _dbContext.Entry(existing).CurrentValues.SetValues(entity);

@@ -10,9 +10,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(
     cfg => { },
     typeof(StoreProductProfile).Assembly);
-
+builder.AddExceptionHandlers();
 builder.AddDbContext();
 builder.AddServices();
+builder.Services.AddProblemDetails();
 
 WebApplication app = builder.Build();
 
@@ -21,6 +22,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

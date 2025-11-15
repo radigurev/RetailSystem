@@ -17,6 +17,10 @@ public class StoreProductProfile : Profile
     {
         CreateMap<Product, ProductDTO>();
         CreateMap<ProductCreateRequest, Product>();
-        CreateMap<ProductUpdateRequest, Product>();
+        CreateMap<ProductUpdateRequest, Product>()
+            .ForAllMembers(opt =>
+                opt.Condition(
+                    (_, _, sourceMember, _) =>
+                        sourceMember != null));
     }
 }

@@ -6,7 +6,7 @@ public class ProductUpdateRequest
     
     public string? Description { get; set; }
     
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
     
-    public decimal MinPrice { get; set; }
+    public decimal? MinPrice { get; set; }
 }
