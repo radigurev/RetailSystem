@@ -1,7 +1,7 @@
 namespace Shared.DTOs;
 
 /// <summary>
-/// 
+/// DTO for Product entity
 /// </summary>
 /// <param name="Id"></param>
 /// <param name="Name"></param>

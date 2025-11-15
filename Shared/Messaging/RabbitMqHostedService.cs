@@ -2,6 +2,10 @@ using Microsoft.Extensions.Hosting;
 
 namespace Shared.Messaging;
 
+/// <summary>
+/// Hosted service to initialize MQ 
+/// </summary>
+/// <param name="mqService"></param>
 public class RabbitMqHostedService(IMqService mqService) : IHostedService
 {
     private readonly IMqService _mqService = mqService;

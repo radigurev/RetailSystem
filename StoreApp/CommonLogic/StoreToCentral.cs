@@ -7,10 +7,15 @@ using StoreApp.Abstractions;
 
 namespace StoreApp.CommonLogic;
 
+/// <summary>
+/// Implementation of Store communication to RabbitMQ
+/// </summary>
+/// <param name="mqService"></param>
 public class StoreToCentral(IMqService mqService) : IStoreToCentral
 {
     private readonly IMqService _mqService = mqService; 
     
+    /// <inheritdoc/>
     public async Task PublishAsync(
         ProductSyncMessage message,
         CancellationToken cancellationToken = default)
@@ -19,6 +24,7 @@ public class StoreToCentral(IMqService mqService) : IStoreToCentral
 
         string json = JsonSerializer.Serialize(message);
         byte[] body = Encoding.UTF8.GetBytes(json);
+        
         await _mqService.Channel.BasicPublishAsync(
             exchange: "central-sync",
             routingKey: string.Empty,

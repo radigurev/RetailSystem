@@ -1,5 +1,6 @@
 using CentralApp.Services;
 using CentralApp.Services.Producers;
+using Shared.Interfaces;
 using Shared.Messaging;
 
 namespace CentralApp.Extensions;
