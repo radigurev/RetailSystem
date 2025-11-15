@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Shared.Abstractions;
 
 /// <summary>
@@ -8,7 +11,9 @@ public abstract class BaseEntity
     /// <summary>
     /// Entity identifier.
     /// </summary>
-    public Guid Id { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
     /// <summary>
     /// Date and time when the entity was created (UTC).
