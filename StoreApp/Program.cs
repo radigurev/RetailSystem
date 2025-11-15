@@ -1,12 +1,17 @@
 using Microsoft.AspNetCore.Builder;
-using StoreApp.Extensions;
+using StoreApp.Helpers;
+using StoreApp.Mapping;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(
+    cfg => { },
+    typeof(StoreProductProfile).Assembly);
 
+builder.AddDbContext();
 builder.AddServices();
 
 WebApplication app = builder.Build();

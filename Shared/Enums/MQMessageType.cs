@@ -6,5 +6,6 @@ namespace Shared.Enums;
 public enum MQMessageType
 {
     Create = 0,
-    Update = 1
+    Update = 1,
+    Delete = 2
 }

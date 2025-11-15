@@ -14,7 +14,7 @@ public interface IDbService<TEntity>
     /// </summary>
     /// <param name="predicate"></param>
     /// <param name="cancellationToken"></param>
-    Task<TEntity?> GetAsync(
+    Task<TEntity> GetAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
 
@@ -23,7 +23,7 @@ public interface IDbService<TEntity>
     /// </summary>
     /// <param name="predicate"></param>
     /// <param name="cancellationToken"></param>
-    Task<IReadOnlyList<TEntity>> GetAllAsync(
+    Task<IEnumerable<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>>? predicate,
         CancellationToken cancellationToken);
 
@@ -41,7 +41,7 @@ public interface IDbService<TEntity>
     /// </summary>
     /// <param name="entity"></param>
     /// <param name="cancellationToken"></param>
-    Task<TEntity?> UpdateAsync(
+    Task<TEntity> UpdateAsync(
         TEntity entity,
         CancellationToken cancellationToken);
 
@@ -50,7 +50,7 @@ public interface IDbService<TEntity>
     /// </summary>
     /// <param name="predicate"></param>
     /// <param name="cancellationToken"></param>
-    Task<bool> DeleteAsync(
+    Task DeleteAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
 }
