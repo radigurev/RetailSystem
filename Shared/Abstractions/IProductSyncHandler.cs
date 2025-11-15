@@ -1,6 +1,6 @@
 using Shared.DTOs;
 
-namespace Shared.Interfaces;
+namespace Shared.Abstractions;
 
 /// <summary>
 /// Interface for product handling after MQ

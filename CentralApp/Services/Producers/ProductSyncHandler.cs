@@ -1,5 +1,5 @@
 using Shared.DTOs;
-using Shared.Interfaces;
+using Shared.Abstractions;
 
 namespace CentralApp.Services.Producers;
 

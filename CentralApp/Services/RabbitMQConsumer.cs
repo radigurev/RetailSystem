@@ -3,7 +3,7 @@ using System.Text.Json;
 using CentralApp.Services.Producers;
 using RabbitMQ.Client.Events;
 using Shared.DTOs;
-using Shared.Interfaces;
+using Shared.Abstractions;
 using Shared.Messaging;
 
 namespace CentralApp.Services;
