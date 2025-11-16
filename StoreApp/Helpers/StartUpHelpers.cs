@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Shared.ExceptionHandlers;
 using Shared.Exceptions;
 using Shared.Messaging;
 using StoreApp.Abstractions;
 using StoreApp.CommonLogic;
 using StoreApp.Database;
-using StoreApp.Helpers.ExceptionHandlers;
 
 namespace StoreApp.Helpers;
 
