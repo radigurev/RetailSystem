@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
+using Shared.Exceptions;
 
 namespace Shared.Messaging;
 
@@ -22,9 +23,12 @@ public class RabbitMqService : IMqService
     public RabbitMqService(IConfiguration configuration)
     {
         //TODO: Throw exceptions
-        string host = configuration["RabbitMQ:HostName"] ?? "localhost";
-        string user = configuration["RabbitMQ:UserName"] ?? "guest";
-        string pass = configuration["RabbitMQ:Password"] ?? "guest";
+        string host = configuration["RabbitMQ:HostName"] ??
+                      throw new ConfigMissingException("RabbitMQ:HostName is missing", "HostName");
+        string user = configuration["RabbitMQ:UserName"] ??
+                      throw new ConfigMissingException("RabbitMQ:UserName is missing", "UserName");
+        string pass = configuration["RabbitMQ:Password"] ??
+                      throw new ConfigMissingException("RabbitMQ:Password is missing", "Password");
 
         _factory = new ConnectionFactory
         {

@@ -62,7 +62,9 @@ public static class StartUpExtensions
         /// </summary>
         public void AddExceptionHandlers()
         {
-            builder.Services.AddExceptionHandler<EntityNotFoundExceptionHandler>();
+            builder.Services
+                .AddExceptionHandler<EntityNotFoundExceptionHandler>()
+                .AddExceptionHandler<ConfigMissingExceptionHandler>();
         }
     }
 }

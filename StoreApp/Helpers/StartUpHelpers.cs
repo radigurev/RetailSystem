@@ -54,7 +54,9 @@ public static class StartUpHelpers
         /// Adds all exception handlers
         /// </summary>
         public void AddExceptionHandlers()
-            => builder.Services.AddExceptionHandler<EntityNotFoundExceptionHandler>();
+            => builder.Services
+                .AddExceptionHandler<EntityNotFoundExceptionHandler>()
+                .AddExceptionHandler<ConfigMissingExceptionHandler>();
 
         /// <summary>
         /// Sets Db context connection and settings
