@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 
-namespace StoreApp.Helpers.ExceptionHandlers;
+namespace Shared.ExceptionHandlers;
 
 public class EntityNotFoundExceptionHandler(ILogger<EntityNotFoundExceptionHandler> logger) : IExceptionHandler
 {

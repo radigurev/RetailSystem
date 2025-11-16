@@ -1,12 +1,11 @@
 using System.Text;
 using System.Text.Json;
-using CentralApp.Services.Producers;
 using RabbitMQ.Client.Events;
-using Shared.DTOs;
 using Shared.Abstractions;
+using Shared.DTOs;
 using Shared.Messaging;
 
-namespace CentralApp.Services;
+namespace CentralApp.CommonLogic;
 
 /// <summary>
 /// Rabbit MQ consumer of incoming messages

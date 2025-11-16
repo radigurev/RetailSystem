@@ -1,7 +1,7 @@
-using Shared.DTOs;
 using Shared.Abstractions;
+using Shared.DTOs;
 
-namespace CentralApp.Services.Producers;
+namespace CentralApp.CommonLogic.Producers;
 
 /// <summary>
 /// Handles what happens with products coming from MQ
