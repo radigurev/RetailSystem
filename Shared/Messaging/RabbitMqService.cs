@@ -37,28 +37,24 @@ public class RabbitMqService : IMqService
         _channel ?? throw new InvalidOperationException("RabbitMQ channel not initialized yet.");
 
     /// <inheritdoc/>
-    public async Task InitializeAsync(CancellationToken cancellationToken = default)
+    public async Task InitializeAsync(
+        IReadOnlyList<ExchangeDeclareDTO> exchanges,
+        CancellationToken cancellationToken = default)
     {
         try
         {
             _connection = await _factory.CreateConnectionAsync(cancellationToken);
             _channel = await _connection.CreateChannelAsync(cancellationToken: cancellationToken);
 
-            await _channel.ExchangeDeclareAsync(
-                exchange: "central-sync",
-                type: ExchangeType.Fanout,
-                durable: true,
-                autoDelete: false,
-                arguments: null,
-                cancellationToken: cancellationToken);
-
-            await _channel.ExchangeDeclareAsync(
-                exchange: "store-sync",
-                type: ExchangeType.Direct,
-                durable: true,
-                autoDelete: false,
-                arguments: null,
-                cancellationToken: cancellationToken);
+            foreach (ExchangeDeclareDTO exchange in exchanges)
+                await _channel.ExchangeDeclareAsync(
+                    exchange: exchange.Exchange,
+                    type: exchange.ExchangeType,
+                    durable: exchange.Durable,
+                    autoDelete: exchange.AutoDelete,
+                    arguments: null,
+                    cancellationToken: cancellationToken
+                );
 
             _readyTcs.TrySetResult(true);
         }
@@ -68,7 +64,7 @@ public class RabbitMqService : IMqService
             throw;
         }
     }
-    
+
     /// <inheritdoc/>
     public Task WaitUntilReadyAsync(CancellationToken cancellationToken = default)
         => _readyTcs.Task.WaitAsync(cancellationToken);

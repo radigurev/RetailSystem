@@ -6,8 +6,11 @@ namespace Shared.Messaging;
 /// Hosted service to initialize MQ 
 /// </summary>
 /// <param name="mqService"></param>
-public class RabbitMqHostedService(IMqService mqService) : IHostedService
+public class RabbitMqHostedService(
+    IMqService mqService,
+    IReadOnlyList<ExchangeDeclareDTO> exchanges) : IHostedService
 {
+    private readonly IReadOnlyList<ExchangeDeclareDTO> _exchanges = exchanges;
     private readonly IMqService _mqService = mqService;
     
     /// <summary>
@@ -15,7 +18,7 @@ public class RabbitMqHostedService(IMqService mqService) : IHostedService
     /// </summary>
     /// <param name="cancellationToken"></param>
     public async Task StartAsync(CancellationToken cancellationToken)
-        => await _mqService.InitializeAsync(cancellationToken);
+        => await _mqService.InitializeAsync(_exchanges, cancellationToken);
     
     /// <summary>
     /// Disposes MQ

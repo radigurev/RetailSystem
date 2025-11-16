@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client;
 using Shared.ExceptionHandlers;
 using Shared.Exceptions;
 using Shared.Messaging;
@@ -14,37 +15,42 @@ namespace StoreApp.Helpers;
 /// </summary>
 public static class StartUpHelpers
 {
-    /// <summary>
-    /// Add Services for DI
-    /// </summary>
     /// <param name="builder"></param>
-    public static void AddServices(this IHostApplicationBuilder builder)
+    extension(IHostApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<IMqService, RabbitMqService>();
-
-        builder.Services.AddScoped<IStoreToCentral, StoreToCentral>();
-        builder.Services.AddScoped<IProductService, ProductService>();
-        builder.Services.AddScoped<IConfigService, ConfigService>();
-        builder.Services.AddHostedService<RabbitMqHostedService>();
-    }
-
-    /// <summary>
-    /// Adds all exception handlers
-    /// </summary>
-    /// <param name="builder"></param>
-    public static void AddExceptionHandlers(this IHostApplicationBuilder builder)
-        => builder.Services.AddExceptionHandler<EntityNotFoundExceptionHandler>();
-
-    /// <summary>
-    /// Sets Db context connection and settings
-    /// </summary>
-    /// <param name="builder"></param>
-    public static void AddDbContext(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddDbContext<StoreDbContext>(options =>
+        /// <summary>
+        /// Add Services for DI
+        /// </summary>
+        public void AddServices()
         {
-            options.UseSqlServer(
-                builder.Configuration.GetConnectionString("StoreConnection"));
-        });
+            builder.Services.AddSingleton<IReadOnlyList<ExchangeDeclareDTO>>(
+            [
+                new ExchangeDeclareDTO("central-sync", ExchangeType.Fanout, true, false)
+            ]);
+            builder.Services.AddSingleton<IMqService, RabbitMqService>();
+
+            builder.Services.AddScoped<IStoreToCentral, StoreToCentral>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IConfigService, ConfigService>();
+            builder.Services.AddHostedService<RabbitMqHostedService>();
+        }
+
+        /// <summary>
+        /// Adds all exception handlers
+        /// </summary>
+        public void AddExceptionHandlers()
+            => builder.Services.AddExceptionHandler<EntityNotFoundExceptionHandler>();
+
+        /// <summary>
+        /// Sets Db context connection and settings
+        /// </summary>
+        public void AddDbContext()
+        {
+            builder.Services.AddDbContext<StoreDbContext>(options =>
+            {
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("StoreConnection"));
+            });
+        }
     }
 }

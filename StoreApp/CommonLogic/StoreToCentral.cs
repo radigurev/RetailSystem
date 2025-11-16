@@ -5,6 +5,8 @@ using Shared.DTOs;
 using Shared.Messaging;
 using StoreApp.Abstractions;
 
+using static StoreApp.Helpers.StoreConstants;
+
 namespace StoreApp.CommonLogic;
 
 /// <summary>
@@ -26,8 +28,8 @@ public class StoreToCentral(IMqService mqService) : IStoreToCentral
         byte[] body = Encoding.UTF8.GetBytes(json);
         
         await _mqService.Channel.BasicPublishAsync(
-            exchange: "central-sync",
-            routingKey: string.Empty,
+            exchange: CENTRAL_EXCHANGE_KEY,
+            routingKey: CENTRAL_EXCHANGE_ROUTING_KEY,
             mandatory: false,
             body: body,
             cancellationToken: cancellationToken);

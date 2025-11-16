@@ -13,7 +13,9 @@ public interface IMqService : IAsyncDisposable
     /// Called by the hosted service at startup to init connection/channel.
     /// Safe to call multiple times; only first call does the work.
     /// </summary>
-    Task InitializeAsync(CancellationToken cancellationToken = default);
+    internal Task InitializeAsync(
+        IReadOnlyList<ExchangeDeclareDTO> exchanges,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Await this before using Channel to ensure it is ready.
