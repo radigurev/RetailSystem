@@ -2,10 +2,15 @@ using System.Linq.Expressions;
 using AutoMapper;
 using CentralApp.Abstractions;
 using CentralApp.Database.Models;
+using CentralApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Abstractions.Caches;
 using Shared.DTOs;
+using Shared.Enums;
+using Shared.Models;
 using StoreApp.Models;
+using static CentralApp.Helpers.CentralConstants;
 
 namespace CentralApp.Controllers;
 
@@ -15,15 +20,13 @@ namespace CentralApp.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class ProductsController(
-    IProductService productService,
-    IStoreService storeService,
-    IMapper mapper,
-    ILogger<ProductsController> logger) : ControllerBase
+    IProductService _productService,
+    IStoreService _storeService,
+    IMapper _mapper,
+    ILogger<ProductsController> _logger,
+    ICacheService _cacheService,
+    ICentralToStores _centralToStores) : ControllerBase
 {
-    private readonly IProductService _productService = productService;
-    private readonly IStoreService _storeService = storeService;
-    private readonly IMapper _mapper = mapper;
-    private readonly ILogger<ProductsController> _logger = logger;
 
     /// <summary>
     /// Gets a product by id from the central database.
@@ -103,6 +106,8 @@ public class ProductsController(
 
             ProductDTO dto = _mapper.Map<ProductDTO>(created);
 
+            await AlertCentral(dto, MQMessageType.Create, sourceStoreId, cancellationToken);
+            
             return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);
         }
         catch (Exception ex)
@@ -169,5 +174,20 @@ public class ProductsController(
             _logger.LogError(ex, "Error while deleting product {Id}", id);
             return StatusCode(StatusCodes.Status500InternalServerError, "Unexpected error.");
         }
+    }
+    
+    private async Task AlertCentral(
+        ProductDTO productDto,
+        MQMessageType type,
+        Guid storeId,
+        CancellationToken cancellationToken)
+    {
+        
+        ProductSyncMessage message = new(
+            Type: type,
+            StoreGuid: storeId,
+            Product: productDto);
+
+        await _centralToStores.PublishAsync(message, cancellationToken);
     }
 }

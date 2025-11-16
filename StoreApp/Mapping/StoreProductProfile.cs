@@ -1,5 +1,6 @@
 using AutoMapper;
 using Shared.DTOs;
+using Shared.Models;
 using StoreApp.Database.Models;
 using StoreApp.Models;
 

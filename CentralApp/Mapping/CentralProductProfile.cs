@@ -2,6 +2,7 @@ using AutoMapper;
 using CentralApp.Database.Models;
 using CentralApp.Models;
 using Shared.DTOs;
+using Shared.Models;
 using StoreApp.Models;
 
 namespace CentralApp.Mapping

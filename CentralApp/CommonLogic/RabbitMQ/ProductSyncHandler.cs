@@ -5,7 +5,7 @@ using CentralApp.Database.Models;
 using Shared.Abstractions;
 using Shared.DTOs;
 
-namespace CentralApp.CommonLogic.Producers;
+namespace CentralApp.CommonLogic.RabbitMQ;
 
 /// <summary>
 /// Handles what happens with products coming from MQ

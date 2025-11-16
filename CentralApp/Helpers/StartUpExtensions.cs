@@ -1,8 +1,6 @@
 using CentralApp.Abstractions;
-using CentralApp.CommonLogic;
 using CentralApp.CommonLogic.Caches;
 using CentralApp.CommonLogic.DatabaseServices;
-using CentralApp.CommonLogic.Producers;
 using CentralApp.CommonLogic.RabbitMQ;
 using CentralApp.Database;
 using CentralApp.Models;
@@ -54,7 +52,7 @@ public static class StartUpExtensions
             builder.Services.AddScoped<IProductSyncHandler, ProductSyncHandler>();
             builder.Services.AddScoped<IStoreService, StoreService>();
             builder.Services.AddScoped<IProductService, ProductService>();
-            
+            builder.Services.AddScoped<ICentralToStores, CenterToStores>();
             builder.Services.AddHostedService<RabbitMqHostedService>();
             builder.Services.AddHostedService<CentralRabbitMQConsumer>();
         }

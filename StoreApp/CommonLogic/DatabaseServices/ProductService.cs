@@ -13,10 +13,10 @@ namespace StoreApp.CommonLogic
     /// EF-based implementation of the store product database service.
     /// </summary>
     public class ProductService(
-        StoreDbContext dbContext) : IProductService
+        StoreDbContext _dbContext) : IProductService
     {
-        private readonly StoreDbContext _dbContext = dbContext;
-        
+
+        #region Base DB Service Implementation
         /// <summary>
         /// Gets a single store product matching the predicate.
         /// </summary>
@@ -110,5 +110,18 @@ namespace StoreApp.CommonLogic
             _dbContext.RemoveRange(entities);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
+        #endregion
+
+        public async Task<Product> UpsertProduct(
+            Expression<Func<Product, bool>> productPredicate,
+            Product productEntity,
+            CancellationToken cancellationToken)
+        {
+            Product? product = await _dbContext.Products.FirstOrDefaultAsync(productPredicate, cancellationToken);
+
+            if (product is null)
+                return await CreateAsync(productEntity, cancellationToken);
+        
+            return await UpdateAsync(productEntity, cancellationToken);        }
     }
 }

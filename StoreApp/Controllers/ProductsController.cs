@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DTOs;
 using Shared.Enums;
+using Shared.Models;
 using StoreApp.Abstractions;
 using StoreApp.Database.Models;
 using StoreApp.Models;
@@ -17,15 +18,11 @@ namespace StoreApp.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class ProductsController(
-        IProductService productService,
-        IMapper mapper,
-        IStoreToCentral storeToCentral,
-        IConfigService configService) : ControllerBase
+        IProductService _productService,
+        IMapper _mapper,
+        IStoreToCentral _storeToCentral,
+        IConfigService _configService) : ControllerBase
     {
-        private readonly IProductService _productService = productService;
-        private readonly IMapper _mapper = mapper;
-        private readonly IStoreToCentral _storeToCentral = storeToCentral;
-        private readonly IConfigService _configService = configService;
         
         /// <summary>
         /// Gets a product by id from the store database.

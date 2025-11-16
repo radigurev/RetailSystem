@@ -27,4 +27,8 @@
     <ItemGroup>
       <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Models\Responses\" />
+    </ItemGroup>
 </Project>

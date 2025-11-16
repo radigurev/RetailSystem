@@ -1,4 +1,4 @@
-namespace StoreApp.Models;
+namespace Shared.Models;
 
 public class ProductCreateRequest
 {
