@@ -13,9 +13,9 @@ namespace RetailSystem.Tests.Shared;
 
 public class CacheServiceTests
 {
-    private sealed record TestDto(int Id, string Name);
+    private record TestDto(int Id, string Name);
 
-    private sealed class TestCacheDataSource : ICacheDataSource<TestDto, int>
+    private class TestCacheDataSource : ICacheDataSource<TestDto, int>
     {
         private readonly IReadOnlyCollection<TestDto> _items;
 
@@ -34,7 +34,7 @@ public class CacheServiceTests
         }
     }
 
-    private sealed class TestCacheDataSourceFactory : ICacheDataSourceFactory
+    private class TestCacheDataSourceFactory : ICacheDataSourceFactory
     {
         private readonly ICacheDataSource<TestDto, int> _testDataSource;
 
@@ -57,18 +57,18 @@ public class CacheServiceTests
     [Fact]
     public async Task GetAllAsync_ReturnsDictionaryFromDataSource()
     {
-        List<TestDto> items = new()
-        {
+        List<TestDto> items =
+        [
             new TestDto(1, "First"),
             new TestDto(2, "Second")
-        };
+        ];
 
         TestCacheDataSource dataSource = new(items);
         TestCacheDataSourceFactory factory = new(dataSource);
 
         IFusionCache fusionCache = new FusionCache(new FusionCacheOptions());
 
-        CacheService service = new CacheService(fusionCache, factory);
+        CacheService service = new(fusionCache, factory);
 
         IReadOnlyDictionary<int, TestDto> result =
             await service.GetAllAsync<TestDto, int>();
@@ -81,18 +81,18 @@ public class CacheServiceTests
     [Fact]
     public async Task GetByKeyAsync_ReturnsSingleItemWhenKeyExists()
     {
-        List<TestDto> items = new()
-        {
+        List<TestDto> items =
+        [
             new TestDto(1, "First"),
             new TestDto(2, "Second")
-        };
+        ];
 
         TestCacheDataSource dataSource = new(items);
         TestCacheDataSourceFactory factory = new(dataSource);
 
         IFusionCache fusionCache = new FusionCache(new FusionCacheOptions());
 
-        CacheService service = new CacheService(fusionCache, factory);
+        CacheService service = new(fusionCache, factory);
 
         TestDto? result =
             await service.GetByKeyAsync<TestDto, int>(2);

@@ -27,13 +27,12 @@ public class CentralProductServiceTests
     [Fact]
     public async Task UpsertProduct_CreatesWhenNotFound()
     {
-        // Arrange
-        using CentralDbContext context = CreateCentralDbContext();
-        ProductService service = new ProductService(context);
+        await using CentralDbContext context = CreateCentralDbContext();
+        ProductService service = new(context);
 
         Guid storeId = Guid.NewGuid();
 
-        CentralProduct newProduct = new CentralProduct
+        CentralProduct newProduct = new()
         {
             Name = "Central Product",
             Description = "Central desc",

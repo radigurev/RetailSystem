@@ -51,10 +51,10 @@ public class StoreProductServiceTests
     [Fact]
     public async Task UpsertProduct_UpdatesExistingProductWhenFound()
     {
-        using StoreDbContext context = CreateStoreDbContext();
-        ProductService service = new ProductService(context);
+        await using StoreDbContext context = CreateStoreDbContext();
+        ProductService service = new(context);
 
-        Product existing = new Product
+        Product existing = new()
         {
             Name = "Old Name",
             Description = "Old",
@@ -65,7 +65,7 @@ public class StoreProductServiceTests
         context.Products.Add(existing);
         await context.SaveChangesAsync();
 
-        Product updateEntity = new Product
+        Product updateEntity = new()
         {
             Id = existing.Id,
             Name = "New Name",
