@@ -4,10 +4,9 @@ using RabbitMQ.Client;
 using Shared.DTOs;
 using Shared.Messaging;
 using StoreApp.Abstractions;
-
 using static StoreApp.Helpers.StoreConstants;
 
-namespace StoreApp.CommonLogic;
+namespace StoreApp.CommonLogic.RabbitMQServices;
 
 /// <summary>
 /// Implementation of Store communication to RabbitMQ

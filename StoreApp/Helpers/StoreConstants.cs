@@ -13,4 +13,6 @@ public class StoreConstants
     public static readonly string CENTRAL_EXCHANGE_KEY = "central-sync";
     
     public static readonly string CENTRAL_EXCHANGE_ROUTING_KEY = "";
+    
+    public static readonly string QUEUE_NAME_KEY = "StoreQueueKey";
 }

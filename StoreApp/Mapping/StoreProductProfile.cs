@@ -16,6 +16,7 @@ public class StoreProductProfile : Profile
     public StoreProductProfile()
     {
         CreateMap<Product, ProductDTO>();
+        CreateMap<Config, ConfigDTO>().ReverseMap();
         CreateMap<ProductCreateRequest, Product>();
         CreateMap<ProductUpdateRequest, Product>()
             .ForAllMembers(opt =>

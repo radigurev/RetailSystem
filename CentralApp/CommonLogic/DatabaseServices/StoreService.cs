@@ -1,86 +1,86 @@
 using System.Linq.Expressions;
+using CentralApp.Abstractions;
+using CentralApp.Database;
+using CentralApp.Database.Models;
 using Microsoft.EntityFrameworkCore;
-using StoreApp.Abstractions;
-using StoreApp.Database;
-using StoreApp.Database.Models;
+using Shared.Exceptions;
 
-namespace StoreApp.CommonLogic;
+namespace CentralApp.CommonLogic.DatabaseServices;
 
 /// <summary>
-/// EF-based implementation of the store configuration database service.
+/// EF-based implementation of the central store database service.
 /// </summary>
-public class ConfigService(StoreDbContext dbContext) : IConfigService
+public class StoreService(CentralDbContext dbContext) : IStoreService
 {
-    private readonly StoreDbContext _dbContext = dbContext;
+    private readonly CentralDbContext _dbContext = dbContext;
 
     /// <summary>
-    /// Gets a single configuration entry matching the predicate.
+    /// Gets a single store matching the predicate.
     /// </summary>
     /// <param name="predicate"></param>
     /// <param name="cancellationToken"></param>
-    public async Task<Config> GetAsync(
-        Expression<Func<Config, bool>> predicate,
+    public async Task<CentralStore> GetAsync(
+        Expression<Func<CentralStore, bool>> predicate,
         CancellationToken cancellationToken)
     {
-        Config? entity = await _dbContext.ConfigEntries
+        CentralStore? entity = await _dbContext.Stores
             .AsNoTracking()
             .FirstOrDefaultAsync(predicate, cancellationToken);
 
-        return entity ?? throw new KeyNotFoundException("Config not found");
+        return entity ?? throw new EntityNotFoundException("Store Not Found");
     }
 
     /// <summary>
-    /// Gets all configuration entries, optionally filtered by predicate.
+    /// Gets all stores, optionally filtered by predicate.
     /// </summary>
     /// <param name="predicate"></param>
     /// <param name="cancellationToken"></param>
-    public async Task<IEnumerable<Config>> GetAllAsync(
-        Expression<Func<Config, bool>>? predicate,
+    public async Task<IEnumerable<CentralStore>> GetAllAsync(
+        Expression<Func<CentralStore, bool>>? predicate,
         CancellationToken cancellationToken)
     {
-        IQueryable<Config> query = _dbContext.ConfigEntries.AsNoTracking();
+        IQueryable<CentralStore> query = _dbContext.Stores.AsNoTracking();
 
         if (predicate != null)
             query = query.Where(predicate);
 
-        List<Config> items = await query.ToListAsync(cancellationToken);
+        List<CentralStore> items = await query.ToListAsync(cancellationToken);
         return items;
     }
 
     /// <summary>
-    /// Creates a new configuration entry.
+    /// Creates a new store.
     /// </summary>
     /// <param name="entity"></param>
     /// <param name="cancellationToken"></param>
-    public async Task<Config> CreateAsync(
-        Config entity,
+    public async Task<CentralStore> CreateAsync(
+        CentralStore entity,
         CancellationToken cancellationToken)
     {
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedAt = DateTime.UtcNow;
 
-        await _dbContext.ConfigEntries.AddAsync(entity, cancellationToken);
+        await _dbContext.Stores.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return entity;
     }
 
     /// <summary>
-    /// Updates an existing configuration entry.
+    /// Updates an existing store.
     /// </summary>
     /// <param name="entity"></param>
     /// <param name="cancellationToken"></param>
-    public async Task<Config> UpdateAsync(
-        Config entity,
+    public async Task<CentralStore> UpdateAsync(
+        CentralStore entity,
         CancellationToken cancellationToken)
     {
-        Config? existing = await _dbContext.ConfigEntries
+        CentralStore? existing = await _dbContext.Stores
             .FirstOrDefaultAsync(x => x.Id == entity.Id, cancellationToken);
 
         if (existing == null)
-            throw new KeyNotFoundException("Config not found");
+            throw new EntityNotFoundException("Store Not Found");
 
-        entity.CreatedAt = existing.CreatedAt;
         entity.UpdatedAt = DateTime.UtcNow;
 
         _dbContext.Entry(existing).CurrentValues.SetValues(entity);
@@ -90,22 +90,21 @@ public class ConfigService(StoreDbContext dbContext) : IConfigService
     }
 
     /// <summary>
-    /// Deletes configuration entries matching the predicate.
+    /// Deletes stores matching the predicate.
     /// </summary>
     /// <param name="predicate"></param>
     /// <param name="cancellationToken"></param>
     public async Task DeleteAsync(
-        Expression<Func<Config, bool>> predicate,
+        Expression<Func<CentralStore, bool>> predicate,
         CancellationToken cancellationToken)
     {
-        List<Config> entities = await _dbContext.ConfigEntries
+        CentralStore? entities = await _dbContext.Stores
             .Where(predicate)
-            .ToListAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
 
-        if (entities.Count == 0)
-            throw new KeyNotFoundException("Config not found");
-
-        _dbContext.ConfigEntries.RemoveRange(entities);
+        if (entities is null)
+            throw new EntityNotFoundException("Store Not Found");
+        _dbContext.Stores.RemoveRange(entities);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

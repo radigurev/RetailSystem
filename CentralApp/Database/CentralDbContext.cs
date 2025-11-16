@@ -26,4 +26,9 @@ public class CentralDbContext : DbContext
     /// Stores table in the central database.
     /// </summary>
     public DbSet<CentralStore> Stores { get; set; } = null!;
+
+    /// <summary>
+    /// Config table in the central database.
+    /// </summary>
+    public DbSet<Config> ConfigEntries { get; set; } = null!;
 }

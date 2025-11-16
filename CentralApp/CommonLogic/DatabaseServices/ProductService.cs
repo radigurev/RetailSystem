@@ -3,10 +3,9 @@ using CentralApp.Abstractions;
 using CentralApp.Database;
 using CentralApp.Database.Models;
 using Microsoft.EntityFrameworkCore;
-using Shared.DTOs;
 using Shared.Exceptions;
 
-namespace CentralApp.CommonLogic;
+namespace CentralApp.CommonLogic.DatabaseServices;
 
 /// <summary>
 /// EF-based implementation of the central product database service.
