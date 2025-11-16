@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
+using Shared.Abstractions;
 using Shared.Abstractions.Caches;
 using Shared.CommonLogic;
 using Shared.ExceptionHandlers;
@@ -43,7 +44,7 @@ public static class StartUpHelpers
             builder.Services.AddScoped<IStoreToCentral, StoreToCentral>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IConfigService, ConfigService>();
-            
+            builder.Services.AddScoped<IProductSyncHandler, ProductSyncHandler>();
             builder.Services.AddHostedService<RabbitMqHostedService>();
             builder.Services.AddHostedService<StoreRabbitMQConsumer>();
 

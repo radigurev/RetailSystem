@@ -16,7 +16,7 @@ public class StoreProductProfile : Profile
     /// </summary>
     public StoreProductProfile()
     {
-        CreateMap<Product, ProductDTO>();
+        CreateMap<Product, ProductDTO>().ReverseMap();
         CreateMap<Config, ConfigDTO>().ReverseMap();
         CreateMap<ProductCreateRequest, Product>();
         CreateMap<ProductUpdateRequest, Product>()
