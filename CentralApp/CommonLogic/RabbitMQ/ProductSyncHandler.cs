@@ -4,6 +4,7 @@ using CentralApp.Abstractions;
 using CentralApp.Database.Models;
 using Shared.Abstractions;
 using Shared.DTOs;
+using Shared.Enums;
 
 namespace CentralApp.CommonLogic.RabbitMQ;
 
@@ -43,6 +44,12 @@ internal class ProductSyncHandler: IProductSyncHandler
                 x => x.SourceStoreId == store.Id
                 && x.Id == message.Product.Id;
 
+            if (message.Type == MQMessageType.Delete)
+            {
+                await _productService.DeleteAsync(productPredicate, cancellationToken);
+                return;
+            }
+            
             CentralProduct toCreate = _mapper.Map<CentralProduct>(message.Product);
             toCreate.SourceStoreId = message.StoreGuid;
 

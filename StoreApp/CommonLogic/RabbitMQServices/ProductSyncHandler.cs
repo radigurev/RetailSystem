@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using Shared.Abstractions;
 using Shared.DTOs;
+using Shared.Enums;
 using StoreApp.Abstractions;
 using StoreApp.Database.Models;
 
@@ -33,6 +34,12 @@ internal class ProductSyncHandler : IProductSyncHandler
             Expression<Func<Product, bool>> productPredicate =
                 x => x.Id == message.Product.Id;
 
+            if (message.Type == MQMessageType.Delete)
+            {
+                await _productService.DeleteAsync(productPredicate, cancellationToken);
+                return;
+            }
+            
             Product toCreate = _mapper.Map<Product>(message.Product);
 
             await _productService.UpsertProduct(productPredicate, toCreate, cancellationToken);
