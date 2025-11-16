@@ -34,7 +34,7 @@ public static class StartUpHelpers
 
             builder.Services.AddSingleton<IReadOnlyList<ExchangeDeclareDTO>>(
             [
-                new ExchangeDeclareDTO("central-sync", ExchangeType.Fanout, true, false)
+                new ExchangeDeclareDTO("store-sync", ExchangeType.Direct, true, false)
             ]);
             builder.Services.AddSingleton<IMqService, RabbitMqService>();
             

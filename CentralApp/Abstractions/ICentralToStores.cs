@@ -6,5 +6,6 @@ public interface ICentralToStores
 {
     public Task PublishAsync(
         ProductSyncMessage message,
+        string routingKey,
         CancellationToken cancellationToken = default);
 }

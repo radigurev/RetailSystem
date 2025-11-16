@@ -106,7 +106,7 @@ public class ProductsController(
 
             ProductDTO dto = _mapper.Map<ProductDTO>(created);
 
-            await AlertCentral(dto, MQMessageType.Create, sourceStoreId, cancellationToken);
+            await AlertCentral(dto, MQMessageType.Create, store.RoutingKey, sourceStoreId, cancellationToken);
             
             return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);
         }
@@ -179,6 +179,7 @@ public class ProductsController(
     private async Task AlertCentral(
         ProductDTO productDto,
         MQMessageType type,
+        string routing,
         Guid storeId,
         CancellationToken cancellationToken)
     {
@@ -188,6 +189,6 @@ public class ProductsController(
             StoreGuid: storeId,
             Product: productDto);
 
-        await _centralToStores.PublishAsync(message, cancellationToken);
+        await _centralToStores.PublishAsync(message, routing, cancellationToken);
     }
 }

@@ -40,7 +40,8 @@ internal class ProductSyncHandler: IProductSyncHandler
                 await _storeService.GetAsync(storePredicate, cancellationToken);
 
             Expression<Func<CentralProduct, bool>> productPredicate =
-                x => x.SourceStoreId == store.Id;
+                x => x.SourceStoreId == store.Id
+                && x.Id == message.Product.Id;
 
             CentralProduct toCreate = _mapper.Map<CentralProduct>(message.Product);
             toCreate.SourceStoreId = message.StoreGuid;
