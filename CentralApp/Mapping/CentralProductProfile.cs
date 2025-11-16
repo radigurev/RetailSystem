@@ -15,7 +15,7 @@ namespace CentralApp.Mapping
         /// </summary>
         public CentralProductProfile()
         {
-            CreateMap<CentralProduct, ProductDTO>();
+            CreateMap<CentralProduct, ProductDTO>().ReverseMap();
 
             CreateMap<ProductCreateRequest, CentralProduct>()
                 .ForMember(dest => dest.SourceStoreId, opt => opt.Ignore());

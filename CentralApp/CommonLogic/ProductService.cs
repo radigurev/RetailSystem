@@ -3,6 +3,7 @@ using CentralApp.Abstractions;
 using CentralApp.Database;
 using CentralApp.Database.Models;
 using Microsoft.EntityFrameworkCore;
+using Shared.DTOs;
 using Shared.Exceptions;
 
 namespace CentralApp.CommonLogic;
@@ -76,9 +77,10 @@ public class ProductService(CentralDbContext dbContext) : IProductService
         CancellationToken cancellationToken)
     {
         CentralProduct? existing = await _dbContext.Products
-            .FirstOrDefaultAsync(x => x.Id == entity.Id, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == entity.Id,
+                cancellationToken);
 
-        if (existing == null)
+        if (existing is null)
             throw new EntityNotFoundException("Product not found");
 
         entity.UpdatedAt = DateTime.UtcNow;
@@ -98,14 +100,28 @@ public class ProductService(CentralDbContext dbContext) : IProductService
         Expression<Func<CentralProduct, bool>> predicate,
         CancellationToken cancellationToken)
     {
-        CentralProduct? entities = await _dbContext.Products
+        CentralProduct? entity = await _dbContext.Products
             .Where(predicate)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (entities == null)
+        if (entity is null)
             throw new EntityNotFoundException("Product not found");
 
-        _dbContext.Products.RemoveRange(entities);
+        _dbContext.Products.RemoveRange(entity);
         await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<CentralProduct> UpsertProduct(
+        Expression<Func<CentralProduct, bool>> productPredicate,
+        CentralProduct productEntity,
+        CancellationToken cancellationToken)
+    {
+        CentralProduct? product = await _dbContext.Products.FirstOrDefaultAsync(productPredicate, cancellationToken);
+
+        if (product is null)
+            return await CreateAsync(productEntity, cancellationToken);
+        
+
+        return await UpdateAsync(productEntity, cancellationToken);
     }
 }

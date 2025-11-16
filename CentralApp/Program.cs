@@ -1,4 +1,4 @@
-using CentralApp.Extensions;
+using CentralApp.Helpers;
 using CentralApp.Mapping;
 using Microsoft.AspNetCore.Builder;
 

@@ -8,7 +8,7 @@ using Shared.Abstractions;
 using Shared.ExceptionHandlers;
 using Shared.Messaging;
 
-namespace CentralApp.Extensions;
+namespace CentralApp.Helpers;
 
 public static class StartUpExtensions
 {
@@ -23,7 +23,7 @@ public static class StartUpExtensions
             builder.Services.AddDbContext<CentralDbContext>(options =>
             {
                 options.UseSqlServer(
-                    builder.Configuration.GetConnectionString("StoreConnection"));
+                    builder.Configuration.GetConnectionString("CentralConnection"));
             });
         }
 
@@ -36,14 +36,13 @@ public static class StartUpExtensions
             [
                 new ExchangeDeclareDTO("central-sync", ExchangeType.Fanout, true, false)
             ]);
-        
-            builder.Services.AddSingleton<IProductSyncHandler, ProductSyncHandler>();   
+
+            builder.Services.AddScoped<IProductSyncHandler, ProductSyncHandler>();
+            builder.Services.AddScoped<IStoreService, StoreService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddSingleton<IMqService, RabbitMqService>();
             builder.Services.AddHostedService<RabbitMqHostedService>();
             builder.Services.AddHostedService<RabbitMQConsumer>();
-        
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IStoreService, StoreService>();
         }
 
         /// <summary>

@@ -10,19 +10,14 @@ namespace CentralApp.CommonLogic;
 /// <summary>
 /// Rabbit MQ consumer of incoming messages
 /// </summary>
-/// <param name="mqService"></param>
-/// <param name="logger"></param>
-/// <param name="handler"></param>
+/// <param name="_mqService"></param>
+/// <param name="_logger"></param>
+/// <param name="_handler"></param>
 internal class RabbitMQConsumer(
-    IMqService mqService,
-    ILogger<RabbitMQConsumer> logger,
-    IProductSyncHandler handler) : IHostedService
+    IMqService _mqService,
+    ILogger<RabbitMQConsumer> _logger,
+    IServiceScopeFactory _scopeFactory) : IHostedService
 {
-    private readonly IMqService _mqService = mqService;
-    private readonly ILogger<RabbitMQConsumer> _logger = logger;
-
-    private readonly IProductSyncHandler _handler = handler;
-
     private string? _consumerTag;
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -77,7 +72,12 @@ internal class RabbitMQConsumer(
                     return;
                 }
 
-                await _handler.HandleAsync(message, CancellationToken.None);
+                using IServiceScope scope = _scopeFactory.CreateScope();
+
+                IProductSyncHandler handler =
+                    scope.ServiceProvider.GetRequiredService<IProductSyncHandler>();
+
+                await handler.HandleAsync(message, CancellationToken.None);
 
                 await _mqService.Channel.BasicAckAsync(ea.DeliveryTag, multiple: false,
                     cancellationToken: cancellationToken);

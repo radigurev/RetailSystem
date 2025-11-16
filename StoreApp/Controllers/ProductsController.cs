@@ -32,9 +32,9 @@ namespace StoreApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:guid}")]
         public async Task<ActionResult<ProductDTO>> GetById(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             Expression<Func<Product, bool>> predicate = x => x.Id == id;
@@ -86,9 +86,9 @@ namespace StoreApp.Controllers
         /// <param name="id"></param>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:guid}")]
         public async Task<ActionResult<ProductDTO>> Update(
-            int id,
+            Guid id,
             [FromBody] ProductUpdateRequest request,
             CancellationToken cancellationToken)
         {
@@ -113,9 +113,9 @@ namespace StoreApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(
-            int id,
+            Guid id,
             CancellationToken cancellationToken)
         {
             Expression<Func<Product, bool>> predicate = x => x.Id == id;
@@ -137,7 +137,7 @@ namespace StoreApp.Controllers
             Config config = await _configService.GetAsync(expression, cancellationToken);
             ProductSyncMessage message = new(
                 Type: type,
-                StoreId: Guid.Parse(config.Value),
+                StoreGuid: Guid.Parse(config.Value),
                 Product: productDto);
 
             await _storeToCentral.PublishAsync(message, cancellationToken);

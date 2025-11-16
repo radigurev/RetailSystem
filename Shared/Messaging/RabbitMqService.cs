@@ -21,6 +21,7 @@ public class RabbitMqService : IMqService
 
     public RabbitMqService(IConfiguration configuration)
     {
+        //TODO: Throw exceptions
         string host = configuration["RabbitMQ:HostName"] ?? "localhost";
         string user = configuration["RabbitMQ:UserName"] ?? "guest";
         string pass = configuration["RabbitMQ:Password"] ?? "guest";

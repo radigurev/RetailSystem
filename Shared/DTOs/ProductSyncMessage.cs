@@ -7,5 +7,5 @@ namespace Shared.DTOs;
 /// </summary>
 public record ProductSyncMessage(
     MQMessageType Type,
-    Guid StoreId,
+    Guid StoreGuid,
     ProductDTO Product);

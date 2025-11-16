@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using Shared.Abstractions;
 
 namespace CentralApp.Database.Models;
@@ -8,6 +9,7 @@ namespace CentralApp.Database.Models;
 /// Product entity stored in the central database.
 /// </summary>
 [Table("Products")]
+[Index(nameof(SourceStoreId), nameof(Name), IsUnique = true)]
 public class CentralProduct : BaseEntity
 {
     /// <summary>
@@ -16,7 +18,7 @@ public class CentralProduct : BaseEntity
     [Required]
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
-
+    
     /// <summary>
     /// Optional description.
     /// </summary>
@@ -39,7 +41,7 @@ public class CentralProduct : BaseEntity
     /// Identifier of the source store.
     /// </summary>
     [Required]
-    public int SourceStoreId { get; set; }
+    public Guid SourceStoreId { get; set; }
 
     /// <summary>
     /// Navigation to the source store.

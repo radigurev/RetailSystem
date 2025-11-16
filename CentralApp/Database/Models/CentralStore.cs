@@ -19,9 +19,6 @@ public class CentralStore : BaseEntity
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
-    public Guid StoreGuid { get; set; }
-
     /// <summary>
     /// Optional store code.
     /// </summary>

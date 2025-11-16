@@ -16,7 +16,7 @@ public class Product : BaseEntity
     [Required]
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
-
+    
     /// <summary>
     /// Optional description.
     /// </summary>

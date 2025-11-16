@@ -30,9 +30,9 @@ public class ProductsController(
     /// </summary>
     /// <param name="id"></param>
     /// <param name="cancellationToken"></param>
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<ProductDTO>> GetById(
-        int id,
+        Guid id,
         CancellationToken cancellationToken)
     {
         try
@@ -90,7 +90,7 @@ public class ProductsController(
         try
         {
             Expression<Func<CentralStore, bool>> storePredicate =
-                x => x.StoreGuid == sourceStoreId;
+                x => x.Id == sourceStoreId;
 
             CentralStore store =
                 await _storeService.GetAsync(storePredicate, cancellationToken);
@@ -118,9 +118,9 @@ public class ProductsController(
     /// <param name="id"></param>
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
-    [HttpPut("{id:int}")]
+    [HttpPut("{id:guid}")]
     public async Task<ActionResult<ProductDTO>> Update(
-        int id,
+        Guid id,
         [FromBody] ProductUpdateRequest request,
         CancellationToken cancellationToken)
     {
@@ -151,9 +151,9 @@ public class ProductsController(
     /// </summary>
     /// <param name="id"></param>
     /// <param name="cancellationToken"></param>
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
-        int id,
+        Guid id,
         CancellationToken cancellationToken)
     {
         try

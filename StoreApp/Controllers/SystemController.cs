@@ -22,13 +22,7 @@ public class SystemController(IStoreToCentral storeToCentral) : ControllerBase
         [FromBody] ProductDTO productDto,
         CancellationToken cancellationToken)
     {
-        ProductSyncMessage message = new(
-            Type: MQMessageType.Create,
-            StoreId: Guid.Parse("11111111-1111-1111-1111-111111111111"), // your store ID
-            Product: productDto);
-
-        await _storeToCentral.PublishAsync(message, cancellationToken);
-
+   
         return Created(nameof(CreateProduct) ,productDto);
     }
 }

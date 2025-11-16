@@ -9,7 +9,7 @@ namespace Shared.DTOs;
 /// <param name="Price"></param>
 /// <param name="MinPrice"></param>
 public record ProductDTO(
-    int Id,
+    Guid Id,
     string Name,
     string Description,
     decimal Price,

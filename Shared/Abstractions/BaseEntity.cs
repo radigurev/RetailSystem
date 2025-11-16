@@ -13,7 +13,7 @@ public abstract class BaseEntity
     /// </summary>
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Date and time when the entity was created (UTC).
