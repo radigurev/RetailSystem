@@ -1,3 +1,4 @@
+using System.Data;
 using System.Linq.Expressions;
 using CentralApp.Abstractions;
 using CentralApp.Database;
@@ -55,6 +56,10 @@ public class ProductService(CentralDbContext _dbContext) : IProductService
         CentralProduct entity,
         CancellationToken cancellationToken)
     {
+        if(_dbContext.Products.Any(x => x.Name == entity.Name
+           && x.SourceStoreId == entity.SourceStoreId))
+            throw new DuplicateProductException("Product already exists");
+        
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedAt = DateTime.UtcNow;
 

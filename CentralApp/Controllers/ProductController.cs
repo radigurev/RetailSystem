@@ -27,7 +27,6 @@ public class ProductsController(
     ICacheService _cacheService,
     ICentralToStores _centralToStores) : ControllerBase
 {
-
     /// <summary>
     /// Gets a product by id from the central database.
     /// </summary>
@@ -106,8 +105,13 @@ public class ProductsController(
 
             ProductDTO dto = _mapper.Map<ProductDTO>(created);
 
-            await AlertCentral(dto, MQMessageType.Create, store.RoutingKey, sourceStoreId, cancellationToken);
-            
+            await AlertStores(
+                dto, 
+                MQMessageType.Create, 
+                store.RoutingKey, 
+                sourceStoreId, 
+                cancellationToken);
+
             return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);
         }
         catch (Exception ex)
@@ -142,6 +146,13 @@ public class ProductsController(
                 await _productService.UpdateAsync(existing, cancellationToken);
 
             ProductDTO dto = _mapper.Map<ProductDTO>(updated);
+            CentralStore store = await _storeService.GetAsync(x => x.Id == existing.SourceStoreId, cancellationToken);
+            await AlertStores(
+                dto, 
+                MQMessageType.Update,
+                store.RoutingKey, 
+                existing.SourceStoreId, 
+                cancellationToken);
             return Ok(dto);
         }
         catch (Exception ex)
@@ -161,29 +172,27 @@ public class ProductsController(
         Guid id,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            Expression<Func<CentralProduct, bool>> predicate = x => x.Id == id;
+        Expression<Func<CentralProduct, bool>> predicate = x => x.Id == id;
+        CentralProduct product = await _productService.GetAsync(predicate, cancellationToken);
+        CentralStore store = await _storeService.GetAsync(x => x.Id == product.SourceStoreId, cancellationToken);
+        await _productService.DeleteAsync(predicate, cancellationToken);
 
-            await _productService.DeleteAsync(predicate, cancellationToken);
-
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error while deleting product {Id}", id);
-            return StatusCode(StatusCodes.Status500InternalServerError, "Unexpected error.");
-        }
+        await AlertStores(_mapper.Map<ProductDTO>(product),
+            MQMessageType.Delete,
+            store.RoutingKey,
+            store.Id,
+            cancellationToken);
+        
+        return NoContent();
     }
-    
-    private async Task AlertCentral(
+
+    private async Task AlertStores(
         ProductDTO productDto,
         MQMessageType type,
         string routing,
         Guid storeId,
         CancellationToken cancellationToken)
     {
-        
         ProductSyncMessage message = new(
             Type: type,
             StoreGuid: storeId,

@@ -27,5 +27,5 @@ public class CentralStore : BaseEntity
 
     [Required]
     [MaxLength(50)]
-    public string? RoutingKey { get; set; } = string.Empty;
+    public string RoutingKey { get; set; } = string.Empty;
 }

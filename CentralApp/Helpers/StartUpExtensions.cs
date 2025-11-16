@@ -63,6 +63,7 @@ public static class StartUpExtensions
         public void AddExceptionHandlers()
         {
             builder.Services
+                .AddExceptionHandler<DuplicateProductExceptionHandler>()
                 .AddExceptionHandler<EntityNotFoundExceptionHandler>()
                 .AddExceptionHandler<ConfigMissingExceptionHandler>();
         }

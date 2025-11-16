@@ -56,6 +56,7 @@ public static class StartUpHelpers
         public void AddExceptionHandlers()
             => builder.Services
                 .AddExceptionHandler<EntityNotFoundExceptionHandler>()
+                .AddExceptionHandler<DuplicateProductExceptionHandler>()
                 .AddExceptionHandler<ConfigMissingExceptionHandler>();
 
         /// <summary>
