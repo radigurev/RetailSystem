@@ -11,10 +11,8 @@ namespace CentralApp.CommonLogic;
 /// <summary>
 /// EF-based implementation of the central product database service.
 /// </summary>
-public class ProductService(CentralDbContext dbContext) : IProductService
+public class ProductService(CentralDbContext _dbContext) : IProductService
 {
-    private readonly CentralDbContext _dbContext = dbContext;
-
     /// <summary>
     /// Gets a single central product matching the predicate.
     /// </summary>
@@ -121,7 +119,6 @@ public class ProductService(CentralDbContext dbContext) : IProductService
         if (product is null)
             return await CreateAsync(productEntity, cancellationToken);
         
-
         return await UpdateAsync(productEntity, cancellationToken);
     }
 }

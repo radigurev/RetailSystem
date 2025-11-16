@@ -1,11 +1,13 @@
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client.Events;
 using Shared.Abstractions;
 using Shared.DTOs;
-using Shared.Messaging;
 
-namespace CentralApp.CommonLogic;
+namespace Shared.Messaging;
 
 /// <summary>
 /// Rabbit MQ consumer of incoming messages
@@ -13,7 +15,7 @@ namespace CentralApp.CommonLogic;
 /// <param name="_mqService"></param>
 /// <param name="_logger"></param>
 /// <param name="_handler"></param>
-internal class RabbitMQConsumer(
+public class RabbitMQConsumer(
     IMqService _mqService,
     ILogger<RabbitMQConsumer> _logger,
     IServiceScopeFactory _scopeFactory) : IHostedService
